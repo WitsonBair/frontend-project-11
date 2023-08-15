@@ -1,11 +1,13 @@
 {
-  "name": "frontend-project-11",
+  "name": "@hexlet/code",
   "version": "1.0.0",
   "description": "[![Actions Status](https://github.com/WitsonBair/frontend-project-11/workflows/hexlet-check/badge.svg)](https://github.com/WitsonBair/frontend-project-11/actions)",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve --mode development",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack --watch",
+    "start": "webpack serve --open",
+    "build": "webpack"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +18,8 @@
     "eslint": "^8.46.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.28.0",
+    "html-webpack-plugin": "^5.5.3",
+    "mini-css-extract-plugin": "^2.7.6",
     "postcss-loader": "^7.3.3",
     "sass": "^1.64.1",
     "sass-loader": "^13.3.2",
