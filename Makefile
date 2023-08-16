@@ -1,7 +1,7 @@
 develop:
 	npx webpack serve
 build:
-	npm run build
+	NODE_ENV=production npx webpack
 start:
 	npm start
 install:
