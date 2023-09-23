@@ -1,50 +1,4 @@
-import onChange from 'on-change';
-
-export default (state, elements, i18n) => {
-  const { form, fields, errorFields } = elements;
-
-  const handleErrors = () => {
-    const formFields = Object.keys(fields);
-    formFields.forEach((item) => {
-      if (!state.form.errors[item]) {
-        fields[item].classList.remove('is-invalid');
-        fields[item].classList.add('is-valid');
-      } else {
-        fields[item].classList.add('is-invalid');
-        fields[item].classList.remove('is-valid');
-        const itemErrors = state.form.errors[item];
-        itemErrors.forEach((error) => {
-          errorFields[item].textContent = i18n.t(error.key, error.values);
-        });
-      }
-    });
-  };
-
-  const clearErrors = () => {
-    Object.values(errorFields).forEach((field) => {
-      field.textContent = '';
-    });
-  };
-
-  const watchedState = onChange(state, (path) => {
-    switch (path) {
-      case 'form.status':
-        break;
-      case 'form.errors':
-        handleErrors();
-        break;
-      case 'form.valid':
-        clearErrors();
-        break;
-      default:
-        break;
-    }
-  });
-
-  return watchedState;
-};
-
-/* const handleProcessState = (process, elements) => {
+const handleProcessState = (process, elements) => {
   switch (process) {
     case 'filling':
       elements.input.disabled = false;
@@ -110,4 +64,3 @@ const initView = (elements) => (path, value) => {
 };
 
 export default initView;
-*/

@@ -1,19 +1,21 @@
+import axios from 'axios';
 import * as yup from 'yup';
 import _ from 'lodash';
 import onChange from 'on-change';
-import axios from 'axios';
 import i18next from 'i18next';
+import initView from './view.js';
 import resources from './locales/index.js';
-import watch from './view.js';
 
-export default async () => {
-  const defaultLanguage = 'ru';
-
+const app = () => {
   const state = {
     form: {
-      status: null,
-      valid: false,
-      errors: [],
+      field: {
+        this: '',
+      },
+      processState: '',
+      response: {},
+      errors: {},
+      processError: null,
     },
     list: [],
   };
@@ -21,8 +23,19 @@ export default async () => {
   const elements = {
     form: document.getElementById('form'),
     input: document.getElementById('input'),
-    errorFields: {},
+    submit: document.getElementById('submit'),
   };
+
+  const defaultLanguage = 'ru';
+
+  const i18n = i18next.createInstance();
+  i18n.init({
+    lng: defaultLanguage,
+    debug: false,
+    resources,
+  });
+
+  const watchState = onChange(state, initView(elements));
 
   yup.setLocale({
     mixed: {
@@ -34,44 +47,40 @@ export default async () => {
     },
   });
 
-  const schema = yup.object({
-    input: yup.string().url().required(),
+  const schema = yup.object().shape({
+    this: yup.string().url().notOneOf(watchState.list).required(),
   });
 
-  /* const validate = (fields) => {
+  const validate = (fields) => {
     try {
-      schema.validate(fields, { abortEarly: false });
+      schema.validateSync(fields, { abortEarly: false });
       return {};
     } catch (e) {
       return _.keyBy(e.inner, 'path');
     }
-  }; */
+  };
 
-  const i18n = i18next.createInstance();
-  await i18n.init({
-    lng: defaultLanguage,
-    debug: false,
-    resources,
+  elements.input.addEventListener('input', (e) => {
+    e.preventDefault();
+    watchState.form.processState = 'filling';
+    const { value } = e.target;
+    watchState.form.field.this = value.trim();
+    const error = validate(watchState.form.field);
+    watchState.form.errors = { error };
   });
-
-  const watchedState = watch(state, elements, i18n);
-  watchedState.form.processState = 'filling';
 
   elements.form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const input = Object.fromEntries(formData);
-    try {
-      await schema.validate(input, { abortEarly: false });
-      watchedState.form.errors = [];
-      watchedState.form.valid = true;
-    } catch (err) {
-      const validationError = err.inner.reduce((acc, cur) => {
-        const { path, message } = cur;
-        const errorData = acc[path] || [];
-        return { ...acc, [path]: [...errorData, message] };
-      });
-      watchedState.form.errors = validationError;
-    }
+    watchState.form.processState = 'sending';
+    const { value } = e.target.input;
+    watchState.form.field.this = value.trim();
+    const error = validate(watchState.form.field);
+    watchState.form.errors = { error };
+
+    watchState.list.push(e.target.input.value);
+    watchState.form.processState = 'success';
+    watchState.form.processState = 'filling';
   });
 };
+
+export default app;
