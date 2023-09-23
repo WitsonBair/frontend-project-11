@@ -6,7 +6,7 @@ import i18next from 'i18next';
 import initView from './view.js';
 import resources from './locales/index.js';
 
-const app = () => {
+const app = async () => {
   const state = {
     form: {
       field: {
@@ -35,8 +35,6 @@ const app = () => {
     resources,
   });
 
-  const watchState = onChange(state, initView(elements));
-
   yup.setLocale({
     mixed: {
       required: () => ({ key: 'errors.validation.required' }),
@@ -47,24 +45,27 @@ const app = () => {
     },
   });
 
-  const schema = yup.object().shape({
-    this: yup.string().url().notOneOf(watchState.list).required(),
-  });
-
-  const validate = (fields) => {
-    try {
-      schema.validateSync(fields, { abortEarly: false });
-      return {};
-    } catch (e) {
-      return _.keyBy(e.inner, 'path');
-    }
-  };
+  const watchState = onChange(state, initView(elements));
 
   elements.input.addEventListener('input', (e) => {
     e.preventDefault();
     watchState.form.processState = 'filling';
     const { value } = e.target;
     watchState.form.field.this = value.trim();
+
+    const schema = yup.object().shape({
+      this: yup.string().url().notOneOf(watchState.list).required(),
+    });
+
+    const validate = (fields) => {
+      try {
+        schema.validateSync(fields, { abortEarly: false });
+        return {};
+      } catch (e) {
+        return _.keyBy(e.inner, 'path');
+      }
+    };
+
     const error = validate(watchState.form.field);
     watchState.form.errors = { error };
   });
@@ -74,8 +75,6 @@ const app = () => {
     watchState.form.processState = 'sending';
     const { value } = e.target.input;
     watchState.form.field.this = value.trim();
-    const error = validate(watchState.form.field);
-    watchState.form.errors = { error };
 
     watchState.list.push(e.target.input.value);
     watchState.form.processState = 'success';
