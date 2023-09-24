@@ -24,6 +24,7 @@ const app = async () => {
     form: document.getElementById('form'),
     input: document.getElementById('input'),
     submit: document.getElementById('submit'),
+    feedback: document.getElementById('feedback'),
   };
 
   const defaultLanguage = 'ru';
@@ -45,7 +46,7 @@ const app = async () => {
     },
   });
 
-  const watchState = onChange(state, initView(elements));
+  const watchState = onChange(state, initView(elements, i18n));
 
   elements.input.addEventListener('input', (e) => {
     e.preventDefault();
