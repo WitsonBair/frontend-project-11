@@ -9,6 +9,7 @@ export default {
         invalidLink: 'Этот URL уже использовался',
         notUrl: 'Это не URL',
       },
+      typeError: 'Это не xml',
     },
     // END
   },

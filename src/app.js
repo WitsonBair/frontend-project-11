@@ -5,6 +5,9 @@ import onChange from 'on-change';
 import i18next from 'i18next';
 import initView from './view.js';
 import resources from './locales/index.js';
+import parse from './parse.js';
+import getData from './utilis/get-data.js';
+import makeList from './utilis/make_list.js';
 
 const app = async () => {
   const state = {
@@ -18,6 +21,8 @@ const app = async () => {
       processError: null,
     },
     list: [],
+    rssList: [],
+    postList: [],
   };
 
   const elements = {
@@ -25,6 +30,8 @@ const app = async () => {
     input: document.getElementById('input'),
     submit: document.getElementById('submit'),
     feedback: document.getElementById('feedback'),
+    rssSource: document.getElementById('rssSource'),
+    posts: document.getElementById('posts'),
   };
 
   const defaultLanguage = 'ru';
@@ -78,6 +85,22 @@ const app = async () => {
     watchState.form.field.this = value.trim();
 
     watchState.list.push(e.target.input.value);
+
+    const xmlData = getData(value.trim());
+    xmlData
+      .then((data) => new DOMParser().parseFromString(data, 'text/xml'))
+      .then((xml) => {
+        const { rssSource, posts } = parse(xml, value.trim());
+        const list = makeList(rssSource, posts);
+        watchState.rssList.unshift(rssSource);
+        watchState.postList.unshift(...list);
+      })
+      .catch((error) => {
+        watchState.form.errors = { error };
+      });
+
+    watchState.form.response = value.trim();
+
     watchState.form.processState = 'success';
     watchState.form.processState = 'filling';
   });

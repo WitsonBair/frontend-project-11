@@ -25,7 +25,9 @@ const handleProcessState = (process, elements) => {
 };
 
 const renderErrorsHandler = (alert, elements, i18n) => {
-  const errorMessage = alert.error.this !== undefined
+  let errorMessage = {};
+
+  errorMessage = alert.error.this !== undefined
     ? alert.error.this.message
     : alert.error.this;
 
@@ -36,11 +38,78 @@ const renderErrorsHandler = (alert, elements, i18n) => {
     elements.input.classList.remove('is-invalid');
     elements.feedback.textContent = '';
   }
+
+  if (alert.error.message === 'xml.querySelector(...) is null') {
+    elements.input.classList.add('is-invalid');
+    elements.feedback.textContent = i18n.t('errors.typeError');
+  }
 };
 
-const makeListHandler = () => {};
+const makeListHandler = (url, elements) => {
+
+};
 
 const processErrorHandler = () => {};
+
+const renderRssList = (rss, elements) => {
+  const rssSourceContainer = elements.rssSource;
+
+  const liElements = rss.map(({ title, description }) => {
+    const liElement = document.createElement('li');
+    liElement.classList.add('list-group-item', 'border-0', 'border-end-0');
+
+    const h3Element = document.createElement('h3');
+    h3Element.classList.add('h6', 'm-0');
+    h3Element.textContent = title;
+
+    const pElement = document.createElement('p');
+    pElement.classList.add('m-0', 'small', 'text-black-50');
+    pElement.textContent = description;
+
+    liElement.append(h3Element, pElement);
+
+    return liElement;
+  });
+
+  rssSourceContainer.replaceChildren(...liElements);
+};
+
+const renderPostList = (posts, elements) => {
+  const postListContainer = elements.posts;
+
+  const liElements = posts.map(({ title, description, link }) => {
+    const liElement = document.createElement('li');
+    liElement.classList.add(
+      'list-group-item',
+      'd-flex',
+      'justify-content-between',
+      'align-items-start',
+      'border-0',
+      'border-end-0',
+    );
+
+    const aElement = document.createElement('a');
+    aElement.setAttribute('href', link);
+    aElement.dataset.id = description;
+    aElement.setAttribute('target', '_blank');
+    aElement.textContent = title;
+    aElement.setAttribute('rel', 'noopener noreferrer');
+
+    const previewButton = document.createElement('button');
+    previewButton.setAttribute('type', 'button');
+    previewButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+    previewButton.dataset.id = description;
+    previewButton.dataset.bsToggle = 'modal';
+    previewButton.dataset.bsTarget = '#modal';
+    previewButton.textContent = 'Просмотр';
+
+    liElement.append(aElement, previewButton);
+
+    return liElement;
+  });
+
+  postListContainer.replaceChildren(...liElements);
+};
 
 const initView = (elements, i18n) => (path, value) => {
   switch (path) {
@@ -53,11 +122,19 @@ const initView = (elements, i18n) => (path, value) => {
       break;
 
     case 'form.response':
-      makeListHandler();
+      makeListHandler(value, elements);
       break;
 
     case 'form.processError':
       processErrorHandler();
+      break;
+
+    case 'rssList':
+      renderRssList(value, elements);
+      break;
+
+    case 'postList':
+      renderPostList(value, elements);
       break;
 
     default:
