@@ -10,7 +10,7 @@ export default (xml, url) => {
     link: item.querySelector('link').textContent,
   }));
 
-  const rss = {
+  const parsedData = {
     rssSource: {
       url,
       title,
@@ -19,5 +19,5 @@ export default (xml, url) => {
     posts,
   };
 
-  return rss;
+  return parsedData;
 };

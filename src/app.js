@@ -5,11 +5,14 @@ import onChange from 'on-change';
 import i18next from 'i18next';
 import initView from './view.js';
 import resources from './locales/index.js';
-import parse from './parse.js';
-import getData from './utilis/get-data.js';
-import makeList from './utilis/make_list.js';
+import parse from './utilis/parse.js';
+import getData from './utilis/get_data.js';
+import setId from './utilis/set_id.js';
+import updateList from './utilis/update_list.js';
 
 const app = async () => {
+  const timeout = 5000;
+
   const state = {
     form: {
       field: {
@@ -91,7 +94,7 @@ const app = async () => {
       .then((data) => new DOMParser().parseFromString(data, 'text/xml'))
       .then((xml) => {
         const { rssSource, posts } = parse(xml, value.trim());
-        const list = makeList(rssSource, posts);
+        const list = setId(rssSource, posts);
         watchState.rssList.unshift(rssSource);
         watchState.postList.unshift(...list);
       })
@@ -103,6 +106,8 @@ const app = async () => {
 
     watchState.form.processState = 'success';
     watchState.form.processState = 'filling';
+
+    updateList(watchState);
   });
 };
 
