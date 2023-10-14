@@ -77,7 +77,7 @@ const renderRssList = (rss, elements) => {
 const renderPostList = (posts, elements) => {
   const postListContainer = elements.posts;
 
-  const liElements = posts.map(({ title, description, link }) => {
+  const liElements = posts.map(({ title, postId, link }) => {
     const liElement = document.createElement('li');
     liElement.classList.add(
       'list-group-item',
@@ -86,11 +86,12 @@ const renderPostList = (posts, elements) => {
       'align-items-start',
       'border-0',
       'border-end-0',
+      'fw-bold',
     );
 
     const aElement = document.createElement('a');
     aElement.setAttribute('href', link);
-    aElement.dataset.id = description;
+    aElement.dataset.id = postId;
     aElement.setAttribute('target', '_blank');
     aElement.textContent = title;
     aElement.setAttribute('rel', 'noopener noreferrer');
@@ -98,7 +99,7 @@ const renderPostList = (posts, elements) => {
     const previewButton = document.createElement('button');
     previewButton.setAttribute('type', 'button');
     previewButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
-    previewButton.dataset.id = description;
+    previewButton.dataset.id = postId;
     previewButton.dataset.bsToggle = 'modal';
     previewButton.dataset.bsTarget = '#modal';
     previewButton.textContent = 'Просмотр';
@@ -109,6 +110,17 @@ const renderPostList = (posts, elements) => {
   });
 
   postListContainer.replaceChildren(...liElements);
+};
+
+const renderModal = ({ description, link, title }, elements) => {
+  elements.modalTitle.textContent = title;
+  elements.modalBody.textContent = description;
+  elements.modalLink.setAttribute('href', link);
+};
+
+const removeBold = (element) => {
+  element.classList.remove('fw-bold');
+  element.classList.add('fw-normal');
 };
 
 const initView = (elements, i18n) => (path, value) => {
@@ -135,6 +147,14 @@ const initView = (elements, i18n) => (path, value) => {
 
     case 'postList':
       renderPostList(value, elements);
+      break;
+
+    case 'modal':
+      renderModal(value, elements);
+      break;
+
+    case 'seenModalPost':
+      removeBold(value);
       break;
 
     default:

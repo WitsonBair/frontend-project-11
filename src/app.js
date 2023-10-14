@@ -26,6 +26,8 @@ const app = async () => {
     list: [],
     rssList: [],
     postList: [],
+    modal: null,
+    seenModalPost: null,
   };
 
   const elements = {
@@ -35,6 +37,10 @@ const app = async () => {
     feedback: document.getElementById('feedback'),
     rssSource: document.getElementById('rssSource'),
     posts: document.getElementById('posts'),
+    modal: document.getElementById('modal'),
+    modalTitle: document.getElementById('modal-title'),
+    modalBody: document.getElementById('modal-body'),
+    modalLink: document.getElementById('modal-link'),
   };
 
   const defaultLanguage = 'ru';
@@ -87,7 +93,7 @@ const app = async () => {
     const { value } = e.target.input;
     watchState.form.field.this = value.trim();
 
-    watchState.list.push(e.target.input.value);
+    watchState.list.push(value.trim());
 
     const xmlData = getData(value.trim());
     xmlData
@@ -108,6 +114,14 @@ const app = async () => {
     watchState.form.processState = 'filling';
 
     updateList(watchState);
+  });
+
+  elements.posts.addEventListener('click', async (e) => {
+    const { id } = e.target.dataset;
+    const modalPost = state.postList.find(({ postId }) => postId === id);
+    const seenPost = elements.posts.querySelector(`[data-id="${id}"]`);
+    watchState.modal = modalPost;
+    watchState.seenModalPost = seenPost;
   });
 };
 
