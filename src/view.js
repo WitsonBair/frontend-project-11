@@ -90,7 +90,7 @@ const renderPostList = (posts, elements) => {
     );
 
     const aElement = document.createElement('a');
-    aElement.classList.add('link-warning');
+    aElement.classList.add('link-light');
     aElement.setAttribute('href', link);
     aElement.dataset.id = postId;
     aElement.setAttribute('target', '_blank');
@@ -99,7 +99,7 @@ const renderPostList = (posts, elements) => {
 
     const previewButton = document.createElement('button');
     previewButton.setAttribute('type', 'button');
-    previewButton.classList.add('btn', 'btn-outline-warning', 'btn-sm');
+    previewButton.classList.add('btn', 'btn-outline-light', 'btn-sm');
     previewButton.dataset.id = postId;
     previewButton.dataset.bsToggle = 'modal';
     previewButton.dataset.bsTarget = '#modal';
