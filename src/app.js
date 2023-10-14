@@ -11,8 +11,6 @@ import setId from './utilis/set_id.js';
 import updateList from './utilis/update_list.js';
 
 const app = async () => {
-  const timeout = 5000;
-
   const state = {
     form: {
       field: {

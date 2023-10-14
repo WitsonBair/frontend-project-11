@@ -4,7 +4,6 @@
   "description": "[![Actions Status](https://github.com/WitsonBair/frontend-project-11/workflows/hexlet-check/badge.svg)](https://github.com/WitsonBair/frontend-project-11/actions)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --watch",
     "start": "webpack serve --open",
     "build": "NODE_ENV=production webpack --mode production"
@@ -13,6 +12,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@playwright/test": "^1.39.0",
+    "@types/node": "^20.8.6",
     "autoprefixer": "^10.4.14",
     "css-loader": "^6.8.1",
     "eslint": "^8.46.0",
