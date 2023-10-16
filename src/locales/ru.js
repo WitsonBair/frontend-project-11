@@ -11,6 +11,6 @@ export default {
       },
       typeError: 'Это не xml',
     },
-    success: 'RSS успешно загружен"',
+    success: 'RSS успешно загружен',
   },
 };

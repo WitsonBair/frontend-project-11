@@ -17,7 +17,7 @@ const handleProcessState = (process, elements, i18n) => {
     case 'success':
       elements.form.reset();
       elements.form.focus();
-      elements.feedback = i18n.t('success');
+      elements.feedback.textContent = i18n.t('success');
       break;
 
     default:
