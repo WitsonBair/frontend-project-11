@@ -1,4 +1,4 @@
-const handleProcessState = (process, elements) => {
+const handleProcessState = (process, elements, i18n) => {
   switch (process) {
     case 'filling':
       elements.input.disabled = false;
@@ -17,6 +17,7 @@ const handleProcessState = (process, elements) => {
     case 'success':
       elements.form.reset();
       elements.form.focus();
+      elements.feedback = i18n.t('success');
       break;
 
     default:
@@ -127,7 +128,7 @@ const removeBold = (element) => {
 const initView = (elements, i18n) => (path, value) => {
   switch (path) {
     case 'form.processState':
-      handleProcessState(value, elements);
+      handleProcessState(value, elements, i18n);
       break;
 
     case 'form.errors':
