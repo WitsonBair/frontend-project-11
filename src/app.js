@@ -1,4 +1,3 @@
-import axios from 'axios';
 import * as yup from 'yup';
 import _ from 'lodash';
 import onChange from 'on-change';
@@ -76,8 +75,9 @@ const app = async () => {
       try {
         schema.validateSync(fields, { abortEarly: false });
         return {};
-      } catch (e) {
-        return _.keyBy(e.inner, 'path');
+      } catch (err) {
+        watchState.form.processState = 'error';
+        return _.keyBy(err.inner, 'path');
       }
     };
 

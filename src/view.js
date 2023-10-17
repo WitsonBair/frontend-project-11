@@ -11,7 +11,7 @@ const handleProcessState = (process, elements, i18n) => {
       break;
 
     case 'error':
-      elements.submit.disabled = false;
+      elements.submit.disabled = true;
       break;
 
     case 'success':
