@@ -104,6 +104,7 @@ const app = async () => {
       })
       .catch((error) => {
         watchState.form.errors = { error };
+        watchState.list.pop();
       });
 
     watchState.form.response = value.trim();
