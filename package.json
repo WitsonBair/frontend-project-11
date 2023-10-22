@@ -12,8 +12,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@playwright/test": "^1.39.0",
-    "@types/node": "^20.8.6",
     "autoprefixer": "^10.4.14",
     "css-loader": "^6.8.1",
     "eslint": "^8.46.0",
@@ -31,7 +29,6 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
-    "axios": "^1.5.0",
     "bootstrap": "^5.3.1",
     "i18next": "^23.5.1",
     "lodash": "^4.17.21",

@@ -46,10 +46,6 @@ const renderErrorsHandler = (alert, elements, i18n) => {
   }
 };
 
-const makeListHandler = (url, elements) => {
-
-};
-
 const processErrorHandler = () => {};
 
 const renderRssList = (rss, elements) => {
@@ -133,10 +129,6 @@ const initView = (elements, i18n) => (path, value) => {
 
     case 'form.errors':
       renderErrorsHandler(value, elements, i18n);
-      break;
-
-    case 'form.response':
-      makeListHandler(value, elements);
       break;
 
     case 'form.processError':

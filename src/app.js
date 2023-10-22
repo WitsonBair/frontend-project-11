@@ -1,12 +1,10 @@
 import * as yup from 'yup';
-import _ from 'lodash';
+import { keyBy, isEmpty } from 'lodash';
 import onChange from 'on-change';
 import i18next from 'i18next';
 import initView from './view.js';
 import resources from './locales/index.js';
-import parse from './utilis/parse.js';
-import getData from './utilis/get_data.js';
-import setId from './utilis/set_id.js';
+import postList from './utilis/post_list.js';
 import updateList from './utilis/update_list.js';
 
 const app = async () => {
@@ -61,10 +59,10 @@ const app = async () => {
 
   const watchState = onChange(state, initView(elements, i18n));
 
-  elements.input.addEventListener('input', (e) => {
+  elements.form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    watchState.form.processState = 'filling';
-    const { value } = e.target;
+    watchState.form.processState = 'sending';
+    const { value } = e.target.input;
     watchState.form.field.this = value.trim();
 
     const schema = yup.object().shape({
@@ -76,43 +74,23 @@ const app = async () => {
         schema.validateSync(fields, { abortEarly: false });
         return {};
       } catch (err) {
-        watchState.form.processState = 'error';
-        return _.keyBy(err.inner, 'path');
+        return keyBy(err.inner, 'path');
       }
     };
 
     const error = validate(watchState.form.field);
     watchState.form.errors = { error };
-  });
 
-  elements.form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    watchState.form.processState = 'sending';
-    const { value } = e.target.input;
-    watchState.form.field.this = value.trim();
-
-    watchState.list.push(value.trim());
-
-    const xmlData = getData(value.trim());
-    xmlData
-      .then((data) => new DOMParser().parseFromString(data, 'text/xml'))
-      .then((xml) => {
-        const { rssSource, posts } = parse(xml, value.trim());
-        const list = setId(rssSource, posts);
-        watchState.rssList.unshift(rssSource);
-        watchState.postList.unshift(...list);
-      })
-      .catch((error) => {
-        watchState.form.errors = { error };
-        watchState.list.pop();
-      });
+    if (isEmpty(error)) {
+      watchState.list.push(value.trim());
+      postList(value.trim(), watchState);
+    }
 
     watchState.form.response = value.trim();
 
-    watchState.form.processState = 'success';
-    watchState.form.processState = 'filling';
-
     updateList(watchState);
+
+    watchState.form.processState = 'filling';
   });
 
   elements.posts.addEventListener('click', async (e) => {
