@@ -10,6 +10,7 @@ export default {
         notUrl: 'Ссылка должна быть валидным URL',
       },
       typeError: 'Ресурс не содержит валидный RSS',
+      noNetwork: 'Ошибка сети',
     },
     success: 'RSS успешно загружен',
   },

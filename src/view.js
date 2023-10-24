@@ -40,11 +40,15 @@ const renderErrorsHandler = (alert, elements, i18n) => {
     elements.feedback.textContent = '';
   }
 
-  if (alert.error instanceof TypeError) {
+  if (alert.error.message === "Cannot read properties of null (reading 'textContent')" || alert.error.message === 'xml.querySelector(...) is null') {
     elements.input.classList.add('is-invalid');
     elements.feedback.textContent = i18n.t('errors.typeError');
   }
-  /* alert.error.message === 'xml.querySelector(...) is null' */
+
+  if (alert.error.message === 'NetworkError when attempting to fetch resource.') {
+    elements.input.classList.add('is-invalid');
+    elements.feedback.textContent = i18n.t('errors.noNetwork');
+  }
 };
 
 const processErrorHandler = () => {};
