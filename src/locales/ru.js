@@ -9,7 +9,7 @@ export default {
         invalidLink: 'RSS уже существует',
         notUrl: 'Ссылка должна быть валидным URL',
       },
-      typeError: 'Это не xml',
+      typeError: 'Ресурс не содержит валидный RSS',
     },
     success: 'RSS успешно загружен',
   },
