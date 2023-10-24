@@ -6,7 +6,7 @@ export default {
     errors: {
       validation: {
         required: 'это обязательное поле',
-        invalidLink: 'Этот URL уже использовался',
+        invalidLink: 'RSS уже существует',
         notUrl: 'Это не URL',
       },
       typeError: 'Это не xml',
