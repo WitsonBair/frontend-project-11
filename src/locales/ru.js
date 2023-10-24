@@ -7,7 +7,7 @@ export default {
       validation: {
         required: 'это обязательное поле',
         invalidLink: 'RSS уже существует',
-        notUrl: 'Это не URL',
+        notUrl: 'Ссылка должна быть валидным URL',
       },
       typeError: 'Это не xml',
     },
