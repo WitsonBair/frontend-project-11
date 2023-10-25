@@ -51,8 +51,6 @@ const renderErrorsHandler = (alert, elements, i18n) => {
   }
 };
 
-const processErrorHandler = () => {};
-
 const renderRssList = (rss, elements) => {
   const rssSourceContainer = elements.rssSource;
 
@@ -92,7 +90,7 @@ const renderPostList = (posts, elements) => {
     );
 
     const aElement = document.createElement('a');
-    aElement.classList.add('link-light');
+    aElement.classList.add('fw-bold');
     aElement.setAttribute('href', link);
     aElement.dataset.id = postId;
     aElement.setAttribute('target', '_blank');
@@ -134,10 +132,6 @@ const initView = (elements, i18n) => (path, value) => {
 
     case 'form.errors':
       renderErrorsHandler(value, elements, i18n);
-      break;
-
-    case 'form.processError':
-      processErrorHandler();
       break;
 
     case 'rssList':
