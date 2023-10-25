@@ -45,7 +45,7 @@ const renderErrorsHandler = (alert, elements, i18n) => {
     elements.feedback.textContent = i18n.t('errors.typeError');
   }
 
-  if (alert.error.message === 'NetworkError when attempting to fetch resource.') {
+  if (alert.error.message === 'NetworkError when attempting to fetch resource.' || alert.error.message === 'Failed to fetch') {
     elements.input.classList.add('is-invalid');
     elements.feedback.textContent = i18n.t('errors.noNetwork');
   }
