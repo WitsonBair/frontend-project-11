@@ -8,59 +8,62 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-  <div class="text-center">
-    <div>
-      <p class="firstLine">R &nbsp; S &nbsp; S &nbsp; &nbsp; А &nbsp; Г &nbsp; Р &nbsp; Е &nbsp; Г &nbsp; А &nbsp;Т
-        &nbsp; О &nbsp; Р</p>
-      <p class="secondLine">Начните читать RSS сегодня! Это легко, это красиво.</p>
-      <p>
-      <div class="container">
-        <form id="form">
-          <div class="row">
-            <div class="col">
-              <div class="form-floating">
-                <input class="form-control w-100 bg-dark text-white" id="input" placeholder="ссылка RSS" aria-label="url">
+  <main class="flex-grow-1">
+    <section class="container-fluid bg-dark p-5">
+      <div class="row">
+        <div class="col-md-10 col-lg-8 mx-auto text-white">
+          <h1 class="display-3 mb-0">RSS агрегатор</h1>
+          <p class="lead">Начните читать RSS сегодня! Это легко, это красиво.</p>
+          <form action="" class="rss-form text-body" id="form">
+            <div class="row">
+              <div class="col">
+                <div class="form-floating">
+                  <input id="input" autofocus="" required="" name="url" aria-label="url" class="form-control w-100"
+                    placeholder="ссылка RSS" autocomplete="off">
+                  <label for="url-input">Ссылка RSS</label>
+                </div>
+              </div>
+              <div class="col-auto">
+                <button id="submit" type="submit" aria-label="add"
+                  class="h-100 btn btn-lg btn-primary px-sm-5">Добавить</button>
               </div>
             </div>
-            <div class="col-auto">
-              <button type="submit" class="h-100 btn btn-lg btn-dark" id="submit">Добавить</button>
-            </div>
-          </div>
-        </form>
-        <p class="feedback m-0 position-absolute small text-warning" id="feedback"></p>
-      </div>
-      <div class="container-fluid container-xxl p-5">
-        <div class="row">
-          <div class="col-md-10 col-lg-8 order-1 mx-auto">
-            <div class="text-start border-0" id="posts"></div>
-          </div>
-          <div class="col-md-10 col-lg-4 mx-auto order-0 order-lg-1">
-            <div class="text-start border-0" id="rssSource"></div>
-          </div>
+          </form>
+          <p class="mt-2 mb-0 text-info">Пример: https://ru.hexlet.io/lessons.rss</p>
+          <p id="feedback" class="feedback m-0 position-absolute small text-success"></p>
         </div>
       </div>
-      </p>
-    </div>
-  </div>
-  <div class="modal" tabindex="-1" id="modal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modal-title">Modal title</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body" id="modal-body">
-          <p>Modal body text goes here.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-          <a type="button" class="btn btn-primary" id="modal-link" target="_blank">Перейти</a>
+    </section>
+    <section class="container-fluid container-xxl p-5">
+      <div class="row">
+        <div id="posts" class="col-md-10 col-lg-8 order-1 mx-auto posts"></div>
+        <div id="rssSource" class="col-md-10 col-lg-4 mx-auto order-0 order-lg-1 feeds"></div>
+      </div>
+    </section>
+    <div class="modal" tabindex="-1" id="modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-title">Modal title</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="modal-body">
+            <p>Modal body text goes here.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            <a type="button" class="btn btn-primary" id="modal-link" target="_blank">Перейти</a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <script src="./src/main.js"></script>
+  </main>
+  <footer class="footer border-top py-3 mt-5 bg-light">
+    <div class="container-xl">
+      <div class="text-center">created by <a href="https://github.com/WitsonBair/frontend-project-11"
+          target="_blank">Tsydendambaev Bair</a></div>
+    </div>
+  </footer>
 </body>
 
 </html>

@@ -34,25 +34,39 @@ const renderErrorsHandler = (alert, elements, i18n) => {
 
   if (errorMessage) {
     elements.input.classList.add('is-invalid');
+    elements.feedback.classList.add('text-danger');
     elements.feedback.textContent = i18n.t(errorMessage.key);
   } else {
     elements.input.classList.remove('is-invalid');
+    elements.feedback.classList.remove('text-danger');
     elements.feedback.textContent = '';
   }
 
   if (alert.error.message === "Cannot read properties of null (reading 'textContent')" || alert.error.message === 'xml.querySelector(...) is null') {
     elements.input.classList.add('is-invalid');
+    elements.feedback.classList.add('text-danger');
     elements.feedback.textContent = i18n.t('errors.typeError');
   }
 
   if (alert.error.message === 'NetworkError when attempting to fetch resource.' || alert.error.message === 'Failed to fetch') {
     elements.input.classList.add('is-invalid');
+    elements.feedback.classList.add('text-danger');
     elements.feedback.textContent = i18n.t('errors.noNetwork');
   }
 };
 
 const renderRssList = (rss, elements) => {
   const rssSourceContainer = elements.rssSource;
+
+  const divRssSourceContainer = document.createElement('div');
+  divRssSourceContainer.classList.add('card', 'border-0');
+
+  const divRssSourceTitleContainer = document.createElement('div');
+  divRssSourceTitleContainer.classList.add('card-body');
+  const h2Element = document.createElement('h2');
+  h2Element.classList.add('card-title', 'h4');
+  h2Element.textContent = 'Фиды';
+  divRssSourceTitleContainer.append(h2Element);
 
   const liElements = rss.map(({ title, description }) => {
     const liElement = document.createElement('li');
@@ -71,11 +85,27 @@ const renderRssList = (rss, elements) => {
     return liElement;
   });
 
-  rssSourceContainer.replaceChildren(...liElements);
+  const ulElement = document.createElement('ul');
+  ulElement.classList.add('list-group', 'border-0', 'rounded-0');
+  ulElement.append(...liElements);
+
+  divRssSourceContainer.append(divRssSourceTitleContainer, ulElement);
+
+  rssSourceContainer.replaceChildren(divRssSourceContainer);
 };
 
 const renderPostList = (posts, elements) => {
   const postListContainer = elements.posts;
+
+  const divPostContainer = document.createElement('div');
+  divPostContainer.classList.add('card', 'border-0');
+
+  const divPostTitleContainer = document.createElement('div');
+  divPostTitleContainer.classList.add('card-body');
+  const h2Element = document.createElement('h2');
+  h2Element.classList.add('card-title', 'h4');
+  h2Element.textContent = 'Посты';
+  divPostTitleContainer.append(h2Element);
 
   const liElements = posts.map(({ title, postId, link }) => {
     const liElement = document.createElement('li');
@@ -86,7 +116,6 @@ const renderPostList = (posts, elements) => {
       'align-items-start',
       'border-0',
       'border-end-0',
-      'fw-bold',
     );
 
     const aElement = document.createElement('a');
@@ -99,7 +128,7 @@ const renderPostList = (posts, elements) => {
 
     const previewButton = document.createElement('button');
     previewButton.setAttribute('type', 'button');
-    previewButton.classList.add('btn', 'btn-outline-light', 'btn-sm');
+    previewButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
     previewButton.dataset.id = postId;
     previewButton.dataset.bsToggle = 'modal';
     previewButton.dataset.bsTarget = '#modal';
@@ -110,7 +139,13 @@ const renderPostList = (posts, elements) => {
     return liElement;
   });
 
-  postListContainer.replaceChildren(...liElements);
+  const ulElement = document.createElement('ul');
+  ulElement.classList.add('list-group', 'border-0', 'rounded-0');
+  ulElement.append(...liElements);
+
+  divPostContainer.append(divPostTitleContainer, ulElement);
+
+  postListContainer.replaceChildren(divPostContainer);
 };
 
 const renderModal = ({ description, link, title }, elements) => {
