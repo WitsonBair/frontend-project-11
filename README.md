@@ -5,7 +5,9 @@
 # RSS aggregator project
 
 Hello! This is a third project from [Hexlet](https://ru.hexlet.io/) Frontend course.
+
 Used technology stack: JavaScript, HTML5 & CSS3, node.js, Webpack, Bootstrap 5, ESLint (Airbnb), Git, GitHub Actions
+
 Used libraries: yup, lodash, on-change, i18next, hexlet-all-origins
 
 ## Description
