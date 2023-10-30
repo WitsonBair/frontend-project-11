@@ -12,3 +12,11 @@ Used libraries: yup, lodash, on-change, i18next, hexlet-all-origins
 
 ## Description
 This is [a website](https://frontend-project-11-rho-ten.vercel.app/) that can aggregate, parse, render and update RSSs (news, new lessons etc.) from different submitted RSS links.
+
+## How to install
+
+1. Clone repository
+2. Install dev dependencies to the project
+3. Enter: npm start
+
+Requirements: node.js, npm
