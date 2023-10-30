@@ -41,13 +41,13 @@ const app = async () => {
   const defaultLanguage = 'ru';
 
   const i18n = i18next.createInstance();
-  i18n.init({
+  await i18n.init({
     lng: defaultLanguage,
     debug: false,
     resources,
   });
 
-  yup.setLocale({
+  await yup.setLocale({
     mixed: {
       required: () => ({ key: 'errors.validation.required' }),
       notOneOf: () => ({ key: 'errors.validation.invalidLink' }),
@@ -78,12 +78,12 @@ const app = async () => {
       }
     };
 
-    const error = validate(watchState.form.field);
+    const error = await validate(watchState.form.field);
     watchState.form.errors = { error };
 
     if (isEmpty(error)) {
       watchState.list.push(value.trim());
-      postList(value.trim(), watchState);
+      await postList(value.trim(), watchState);
     }
 
     watchState.form.response = value.trim();
@@ -93,7 +93,7 @@ const app = async () => {
     watchState.form.processState = 'filling';
   });
 
-  elements.posts.addEventListener('click', async (e) => {
+  elements.posts.addEventListener('click', (e) => {
     const { id } = e.target.dataset;
     const modalPost = state.postList.find(({ postId }) => postId === id);
     const seenPost = elements.posts.querySelector(`[data-id="${id}"]`);
