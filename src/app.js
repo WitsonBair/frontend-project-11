@@ -7,7 +7,7 @@ import resources from './locales/index.js';
 import postList from './utilis/post_list.js';
 import updateList from './utilis/update_list.js';
 
-const app = async () => {
+const app = () => {
   const state = {
     form: {
       field: {
@@ -41,13 +41,13 @@ const app = async () => {
   const defaultLanguage = 'ru';
 
   const i18n = i18next.createInstance();
-  await i18n.init({
+  i18n.init({
     lng: defaultLanguage,
     debug: false,
     resources,
   });
 
-  await yup.setLocale({
+  yup.setLocale({
     mixed: {
       required: () => ({ key: 'errors.validation.required' }),
       notOneOf: () => ({ key: 'errors.validation.invalidLink' }),
@@ -59,7 +59,7 @@ const app = async () => {
 
   const watchState = onChange(state, initView(elements, i18n));
 
-  elements.form.addEventListener('submit', async (e) => {
+  elements.form.addEventListener('submit', (e) => {
     e.preventDefault();
     watchState.form.processState = 'sending';
     const { value } = e.target.input;
@@ -78,12 +78,12 @@ const app = async () => {
       }
     };
 
-    const error = await validate(watchState.form.field);
+    const error = validate(watchState.form.field);
     watchState.form.errors = { error };
 
     if (isEmpty(error)) {
       watchState.list.push(value.trim());
-      await postList(value.trim(), watchState);
+      postList(value.trim(), watchState);
     }
 
     watchState.form.response = value.trim();
