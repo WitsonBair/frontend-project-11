@@ -40,13 +40,6 @@ const app = () => {
 
   const defaultLanguage = 'ru';
 
-  const i18n = i18next.createInstance();
-  i18n.init({
-    lng: defaultLanguage,
-    debug: false,
-    resources,
-  });
-
   yup.setLocale({
     mixed: {
       required: () => ({ key: 'errors.validation.required' }),
@@ -57,48 +50,55 @@ const app = () => {
     },
   });
 
-  const watchState = onChange(state, initView(elements, i18n));
+  const i18n = i18next.createInstance();
+  i18n.init({
+    lng: defaultLanguage,
+    debug: false,
+    resources,
+  }).then(() => {
+    const watchState = onChange(state, initView(elements, i18n));
 
-  elements.form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    watchState.form.processState = 'sending';
-    const { value } = e.target.input;
-    watchState.form.field.this = value.trim();
+    elements.form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      watchState.form.processState = 'sending';
+      const { value } = e.target.input;
+      watchState.form.field.this = value.trim();
 
-    const schema = yup.object().shape({
-      this: yup.string().url().notOneOf(watchState.list).required(),
+      const schema = yup.object().shape({
+        this: yup.string().url().notOneOf(watchState.list).required(),
+      });
+
+      const validate = (fields) => {
+        try {
+          schema.validate(fields, { abortEarly: false });
+          return {};
+        } catch (err) {
+          return keyBy(err.inner, 'path');
+        }
+      };
+
+      const error = validate(watchState.form.field);
+      watchState.form.errors = { error };
+
+      if (isEmpty(error)) {
+        watchState.list.push(value.trim());
+        postList(value.trim(), watchState);
+      }
+
+      watchState.form.response = value.trim();
+
+      updateList(watchState);
+
+      watchState.form.processState = 'filling';
     });
 
-    const validate = (fields) => {
-      try {
-        schema.validateSync(fields, { abortEarly: false });
-        return {};
-      } catch (err) {
-        return keyBy(err.inner, 'path');
-      }
-    };
-
-    const error = validate(watchState.form.field);
-    watchState.form.errors = { error };
-
-    if (isEmpty(error)) {
-      watchState.list.push(value.trim());
-      postList(value.trim(), watchState);
-    }
-
-    watchState.form.response = value.trim();
-
-    updateList(watchState);
-
-    watchState.form.processState = 'filling';
-  });
-
-  elements.posts.addEventListener('click', (e) => {
-    const { id } = e.target.dataset;
-    const modalPost = state.postList.find(({ postId }) => postId === id);
-    const seenPost = elements.posts.querySelector(`[data-id="${id}"]`);
-    watchState.modal = modalPost;
-    watchState.seenModalPost = seenPost;
+    elements.posts.addEventListener('click', (e) => {
+      const { id } = e.target.dataset;
+      const modalPost = state.postList.find(({ postId }) => postId === id);
+      const seenPost = elements.posts.querySelector(`[data-id="${id}"]`);
+      watchState.modal = modalPost;
+      watchState.seenModalPost = seenPost;
+    });
   });
 };
 
