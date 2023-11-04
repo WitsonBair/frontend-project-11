@@ -68,26 +68,15 @@ const app = () => {
         this: yup.string().url().notOneOf(watchState.list).required(),
       });
 
-      const validate = (fields) => {
-        try {
-          schema.validate(fields, { abortEarly: false });
-          return {};
-        } catch (err) {
-          return keyBy(err.inner, 'path');
-        }
-      };
-
-      const error = validate(watchState.form.field);
-      watchState.form.errors = { error };
-
-      if (isEmpty(error)) {
-        watchState.list.push(value.trim());
-        postList(value.trim(), watchState);
-      }
-
-      watchState.form.response = value.trim();
-
-      updateList(watchState);
+      schema.validate(watchState.form.field, { abortEarly: false })
+        .then(() => {
+          watchState.list.push(value.trim());
+          postList(value.trim(), watchState);
+        })
+        .catch((err) => {
+          const error = keyBy(err.inner, 'path');
+          watchState.form.errors = { error };
+        });
 
       watchState.form.processState = 'filling';
     });
@@ -99,6 +88,8 @@ const app = () => {
       watchState.modal = modalPost;
       watchState.seenModalPost = seenPost;
     });
+
+    updateList(watchState);
   });
 };
 
