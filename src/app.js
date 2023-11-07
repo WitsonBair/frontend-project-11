@@ -10,12 +10,8 @@ import updateList from './utilis/update_list.js';
 const app = () => {
   const state = {
     form: {
-      field: {
-        this: '',
-      },
-      processState: '',
-      response: {},
-      errors: {},
+      processState: 'filling',
+      error: {},
       processError: null,
     },
     list: [],
@@ -62,20 +58,19 @@ const app = () => {
       e.preventDefault();
       watchState.form.processState = 'sending';
       const { value } = e.target.input;
-      watchState.form.field.this = value.trim();
 
-      const schema = yup.object().shape({
+      const schema = {
         this: yup.string().url().notOneOf(watchState.list).required(),
-      });
+      };
 
-      schema.validate(watchState.form.field, { abortEarly: false })
+      schema.validate(value.trim(), { abortEarly: false })
         .then(() => {
           watchState.list.push(value.trim());
           postList(value.trim(), watchState);
         })
         .catch((err) => {
           const error = keyBy(err.inner, 'path');
-          watchState.form.errors = { error };
+          watchState.form.error = { error };
         });
 
       watchState.form.processState = 'filling';

@@ -165,7 +165,7 @@ const initView = (elements, i18n) => (path, value) => {
       handleProcessState(value, elements, i18n);
       break;
 
-    case 'form.errors':
+    case 'form.error':
       renderErrorsHandler(value, elements, i18n);
       break;
 
