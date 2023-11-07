@@ -13,6 +13,6 @@ export default async (link, watchState) => getData(link)
     watchState.form.processState = 'filling';
   })
   .catch((error) => {
-    watchState.form.errors = { error };
+    watchState.form.error = { error };
     watchState.list.pop();
   });

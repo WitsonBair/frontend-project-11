@@ -28,9 +28,9 @@ const handleProcessState = (process, elements, i18n) => {
 const renderErrorsHandler = (alert, elements, i18n) => {
   let errorMessage = {};
 
-  errorMessage = alert.error.this !== undefined
-    ? alert.error.this.message
-    : alert.error.this;
+  errorMessage = alert.error !== undefined
+    ? Object.values(alert.error)[0].message
+    : Object.values(alert.error)[0];
 
   if (errorMessage) {
     elements.input.classList.add('is-invalid');
