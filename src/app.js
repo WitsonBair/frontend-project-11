@@ -59,9 +59,9 @@ const app = () => {
       watchState.form.processState = 'sending';
       const { value } = e.target.input;
 
-      const schema = {
+      const schema = yup.object({
         this: yup.string().url().notOneOf(watchState.list).required(),
-      };
+      });
 
       schema.validate(value.trim(), { abortEarly: false })
         .then(() => {
