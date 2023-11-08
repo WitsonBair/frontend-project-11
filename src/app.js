@@ -1,5 +1,4 @@
 import * as yup from 'yup';
-import { keyBy } from 'lodash';
 import onChange from 'on-change';
 import i18next from 'i18next';
 import initView from './view.js';
