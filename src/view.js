@@ -16,7 +16,9 @@ const handleProcessState = (process, elements, i18n) => {
 
     case 'success':
       elements.form.reset();
-      elements.form.focus();
+      elements.input.focus();
+      elements.input.classList.remove('is-invalid');
+      elements.feedback.classList.remove('text-danger');
       elements.feedback.textContent = i18n.t('success');
       break;
 
