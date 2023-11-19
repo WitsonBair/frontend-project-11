@@ -2,9 +2,13 @@ export default async (url) => {
   const rssData = fetch(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`)
     .then((response) => {
       if (response.ok) return response.json();
-      throw new Error('Network response was not ok.');
     })
-    .then((data) => data.contents);
+    .then((data) => data.contents)
+    .catch((err) => {
+      const error = new Error(err.message);
+      error.isNetworkError = true;
+      throw error;
+    });
 
   return rssData;
 };

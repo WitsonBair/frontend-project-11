@@ -3,9 +3,8 @@ import parse from './parse.js';
 import setId from './set_id.js';
 
 export default async (link, watchState) => getData(link)
-  .then((data) => new DOMParser().parseFromString(data, 'text/xml'))
-  .then((xml) => {
-    const { rssSource, posts } = parse(xml, link);
+  .then((data) => {
+    const { rssSource, posts } = parse(data, link);
     const list = setId(rssSource, posts);
     watchState.rssList.unshift(rssSource);
     watchState.postList.unshift(...list);
@@ -13,6 +12,6 @@ export default async (link, watchState) => getData(link)
     watchState.form.processState = 'filling';
   })
   .catch((error) => {
-    watchState.form.error = { error };
+    watchState.form.error = error;
     watchState.list.pop();
   });

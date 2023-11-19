@@ -10,7 +10,7 @@ const app = () => {
   const state = {
     form: {
       processState: 'filling',
-      error: {},
+      error: null,
       processError: null,
     },
     list: [],
@@ -66,8 +66,10 @@ const app = () => {
           postList(value.trim(), watchState);
         })
         .catch((err) => {
-          const error = { this: err.inner[0] };
-          watchState.form.error = { error };
+          console.log(err);
+          const error = { err }; /* this: err.inner[0] */
+          console.log(error);
+          watchState.form.error = err; /* { err } */
         });
 
       watchState.form.processState = 'filling';

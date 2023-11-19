@@ -30,30 +30,24 @@ const handleProcessState = (process, elements, i18n) => {
 const renderErrorsHandler = (alert, elements, i18n) => {
   let errorMessage = {};
 
-  errorMessage = alert.error.this !== undefined
-    ? alert.error.this.message
-    : alert.error.this;
+  errorMessage = alert !== undefined /* alert.error.this */
+    ? alert.message /* alert.error.this.message */
+    : alert; /* alert.error.this */
 
   if (errorMessage) {
     elements.input.classList.add('is-invalid');
     elements.feedback.classList.add('text-danger');
-    elements.feedback.textContent = i18n.t(errorMessage.key);
+    if (alert.isParsingError) {
+      elements.feedback.textContent = i18n.t('errors.typeError');
+    } else if (alert.isNetworkError) {
+      elements.feedback.textContent = i18n.t('errors.noNetwork');
+    } else {
+      elements.feedback.textContent = i18n.t(errorMessage.key);
+    }
   } else {
     elements.input.classList.remove('is-invalid');
     elements.feedback.classList.remove('text-danger');
     elements.feedback.textContent = '';
-  }
-
-  if (alert.error.message === "Cannot read properties of null (reading 'textContent')" || alert.error.message === 'xml.querySelector(...) is null') {
-    elements.input.classList.add('is-invalid');
-    elements.feedback.classList.add('text-danger');
-    elements.feedback.textContent = i18n.t('errors.typeError');
-  }
-
-  if (alert.error.message === 'NetworkError when attempting to fetch resource.' || alert.error.message === 'Failed to fetch') {
-    elements.input.classList.add('is-invalid');
-    elements.feedback.classList.add('text-danger');
-    elements.feedback.textContent = i18n.t('errors.noNetwork');
   }
 };
 
