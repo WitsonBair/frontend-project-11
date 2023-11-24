@@ -6,8 +6,7 @@ const updateList = (watchState) => {
   const { rssList, postList } = watchState;
 
   const promises = rssList.map(({ id, url }) => getData(url)
-    .then((data) => new DOMParser().parseFromString(data, 'text/xml'))
-    .then((xml) => parse(xml, url))
+    .then((xml) => parse(xml))
     .then(({ posts }) => {
       const currentPosts = postList.filter((post) => post.rssId === id);
       const newPosts = posts.map((post) => ({ ...post, rssId: id, postId: uniqueId() }));

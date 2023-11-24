@@ -4,7 +4,8 @@ import setId from './set_id.js';
 
 export default async (link, watchState) => getData(link)
   .then((data) => {
-    const { rssSource, posts } = parse(data, link);
+    const { rssSource, posts } = parse(data);
+    rssSource.url = link;
     const list = setId(rssSource, posts);
     watchState.rssList.unshift(rssSource);
     watchState.postList.unshift(...list);
