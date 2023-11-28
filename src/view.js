@@ -51,7 +51,7 @@ const renderErrorsHandler = (alert, elements, i18n) => {
   }
 };
 
-const renderRssList = (rss, elements) => {
+const renderRssList = (rss, elements, i18n) => {
   const rssSourceContainer = elements.rssSource;
 
   const divRssSourceContainer = document.createElement('div');
@@ -61,7 +61,7 @@ const renderRssList = (rss, elements) => {
   divRssSourceTitleContainer.classList.add('card-body');
   const h2Element = document.createElement('h2');
   h2Element.classList.add('card-title', 'h4');
-  h2Element.textContent = 'Фиды';
+  h2Element.textContent = i18n.t('feed.feeds');
   divRssSourceTitleContainer.append(h2Element);
 
   const liElements = rss.map(({ title, description }) => {
@@ -90,7 +90,7 @@ const renderRssList = (rss, elements) => {
   rssSourceContainer.replaceChildren(divRssSourceContainer);
 };
 
-const renderPostList = (posts, elements) => {
+const renderPostList = (posts, elements, i18n) => {
   const postListContainer = elements.posts;
 
   const divPostContainer = document.createElement('div');
@@ -100,7 +100,7 @@ const renderPostList = (posts, elements) => {
   divPostTitleContainer.classList.add('card-body');
   const h2Element = document.createElement('h2');
   h2Element.classList.add('card-title', 'h4');
-  h2Element.textContent = 'Посты';
+  h2Element.textContent = i18n.t('feed.posts');
   divPostTitleContainer.append(h2Element);
 
   const liElements = posts.map(({ title, postId, link }) => {
@@ -166,11 +166,11 @@ const initView = (elements, i18n) => (path, value) => {
       break;
 
     case 'rssList':
-      renderRssList(value, elements);
+      renderRssList(value, elements, i18n);
       break;
 
     case 'postList':
-      renderPostList(value, elements);
+      renderPostList(value, elements, i18n);
       break;
 
     case 'modal':

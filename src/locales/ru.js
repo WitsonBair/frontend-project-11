@@ -13,5 +13,9 @@ export default {
       noNetwork: 'Ошибка сети',
     },
     success: 'RSS успешно загружен',
+    feed: {
+      feeds: 'Фиды',
+      posts: 'Посты',
+    },
   },
 };
