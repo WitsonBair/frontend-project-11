@@ -5,55 +5,16 @@ import axios from 'axios';
 import { differenceBy, uniqueId } from 'lodash';
 import initView from './view.js';
 import resources from './locales/index.js';
+import parse from './parser.js';
 
-const getData = (url) => {
-  const rssData = axios
-    .get(
-      `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(
-        url,
-      )}`,
-    )
-    .then((response) => response.data.contents) // if (response.ok) return response.json();
-    .catch((err) => {
-      const error = new Error(err.message);
-      error.isNetworkError = true;
-      throw error;
-    });
-
-  return rssData;
+const addProxy = (url) => {
+  const proxyUrl = new URL('https://allorigins.hexlet.app/get');
+  proxyUrl.searchParams.set('disableCache', true);
+  proxyUrl.searchParams.set('url', url);
+  return proxyUrl.toString();
 };
 
-const parse = (data) => {
-  const parser = new DOMParser();
-  const xml = parser.parseFromString(data, 'text/xml');
-  const errorNode = xml.querySelector('parsererror');
-
-  if (errorNode) {
-    const error = new Error(errorNode.textContent);
-    error.isParsingError = true;
-    throw error;
-  }
-  const title = xml.querySelector('title').textContent;
-  const description = xml.querySelector('description').textContent;
-
-  const items = [...xml.querySelectorAll('item')];
-
-  const posts = items.map((item) => ({
-    title: item.querySelector('title').textContent,
-    description: item.querySelector('description').textContent,
-    link: item.querySelector('link').textContent,
-  }));
-
-  const parsedData = {
-    rssSource: {
-      title,
-      description,
-    },
-    posts,
-  };
-
-  return parsedData;
-};
+const getData = (url) => axios.get(addProxy(url));
 
 const setId = (rssSource, posts) => {
   rssSource.id = uniqueId();
@@ -67,8 +28,8 @@ const setId = (rssSource, posts) => {
 };
 
 const postList = (link, watchState) => getData(link)
-  .then((data) => {
-    const { rssSource, posts } = parse(data);
+  .then((response) => {
+    const { rssSource, posts } = parse(response.data.contents);
     rssSource.url = link;
     const list = setId(rssSource, posts);
     watchState.rssList.unshift(rssSource);
@@ -88,7 +49,11 @@ const updateList = (watchState) => {
     .then((xml) => parse(xml))
     .then(({ posts }) => {
       const currentPosts = postedList.filter((post) => post.rssId === id);
-      const newPosts = posts.map((post) => ({ ...post, rssId: id, postId: uniqueId() }));
+      const newPosts = posts.map((post) => ({
+        ...post,
+        rssId: id,
+        postId: uniqueId(),
+      }));
       const updatedPosts = differenceBy(newPosts, currentPosts, 'link');
       postedList.unshift(...updatedPosts);
     })

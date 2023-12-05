@@ -39,7 +39,7 @@ const renderErrorsHandler = (alert, elements, i18n) => {
     elements.feedback.classList.add('text-danger');
     if (alert.isParsingError) {
       elements.feedback.textContent = i18n.t('errors.typeError');
-    } else if (alert.isNetworkError) {
+    } else if (alert.isAxiosError) {
       elements.feedback.textContent = i18n.t('errors.noNetwork');
     } else {
       elements.feedback.textContent = i18n.t(errorMessage.key);
