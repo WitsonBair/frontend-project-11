@@ -14,38 +14,32 @@ const addProxy = (url) => {
   return proxyUrl.toString();
 };
 
-const getData = (url) => axios.get(addProxy(url));
-
-const setId = (rssSource, posts) => {
-  rssSource.id = uniqueId();
-
-  const lists = posts.map((post) => Object.assign(post, {
-    rssId: rssSource.id,
-    postId: uniqueId(),
-  }));
-
-  return lists;
-};
-
-const postList = (link, watchState) => getData(link)
+const postList = (url, watchState) => axios.get(addProxy(url))
   .then((response) => {
     const { rssSource, posts } = parse(response.data.contents);
-    rssSource.url = link;
-    const list = setId(rssSource, posts);
+
+    rssSource.url = url;
+    rssSource.id = uniqueId();
+
+    const list = posts.map((post) => Object.assign(post, {
+      rssId: rssSource.id,
+      postId: uniqueId(),
+    }));
+
     watchState.rssList.unshift(rssSource);
     watchState.postList.unshift(...list);
     watchState.form.processState = 'success';
-    watchState.form.processState = 'filling';
+    /* watchState.form.processState = 'filling'; */
   })
   .catch((error) => {
     watchState.form.error = error;
-    watchState.list.pop();
+    /* watchState.list.pop(); */
   });
 
 const updateList = (watchState) => {
   const { rssList, postedList } = watchState;
 
-  const promises = rssList.map(({ id, url }) => getData(url)
+  const promises = rssList.map(({ id, url }) => axios.get(addProxy(url))
     .then((xml) => parse(xml))
     .then(({ posts }) => {
       const currentPosts = postedList.filter((post) => post.rssId === id);
@@ -72,7 +66,7 @@ const app = () => {
       error: null,
       processError: null,
     },
-    list: [],
+    /* list: [], */
     rssList: [],
     postList: [],
     modal: null,
@@ -119,12 +113,16 @@ const app = () => {
         watchState.form.processState = 'sending';
         const { value } = e.target.input;
 
-        const schema = yup.string().url().notOneOf(watchState.list).required();
+        const schema = yup
+          .string()
+          .url()
+          .notOneOf(watchState.rssList.map((item) => item.url))
+          .required();
 
         schema
           .validate(value, { abortEarly: false })
           .then(() => {
-            watchState.list.push(value.trim());
+            /* watchState.list.push(value.trim()); */
             postList(value.trim(), watchState);
           })
           .catch((err) => {
