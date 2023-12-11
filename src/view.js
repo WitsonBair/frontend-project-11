@@ -27,12 +27,18 @@ const handleProcessState = (process, elements, i18n) => {
   }
 };
 
-const renderErrorsHandler = (alert, elements, i18n) => {
+const renderErrorsHandler = (errorMessage, elements, i18n) => {
+  if (!errorMessage) return;
+
+  elements.input.classList.add('is-invalid');
+  elements.feedback.classList.add('text-danger');
+  elements.feedback.textContent = i18n.t(errorMessage);
+  /*
   let errorMessage = {};
 
-  errorMessage = alert !== undefined /* alert.error.this */
-    ? alert.message /* alert.error.this.message */
-    : alert; /* alert.error.this */
+  errorMessage = alert !== undefined
+    ? alert.message
+    : alert;
 
   if (errorMessage) {
     elements.input.classList.add('is-invalid');
@@ -49,6 +55,7 @@ const renderErrorsHandler = (alert, elements, i18n) => {
     elements.feedback.classList.remove('text-danger');
     elements.feedback.textContent = '';
   }
+  */
 };
 
 const renderRssList = (rss, elements, i18n) => {

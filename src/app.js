@@ -32,8 +32,14 @@ const postList = (url, watchState) => axios.get(addProxy(url))
     /* watchState.form.processState = 'filling'; */
   })
   .catch((error) => {
-    watchState.form.error = error;
-    /* watchState.list.pop(); */
+    if (error.isParsingError) {
+      watchState.form.error = 'errors.typeError';
+    }
+    if (error.isAxiosError) {
+      watchState.form.error = 'errors.noNetwork';
+    }
+    // eslint-disable-next-line no-console
+    console.log(error);
   });
 
 const updateList = (watchState) => {
@@ -126,7 +132,7 @@ const app = () => {
             postList(value.trim(), watchState);
           })
           .catch((err) => {
-            watchState.form.error = err;
+            watchState.form.error = err.message.key;
           });
 
         watchState.form.processState = 'filling';
