@@ -29,17 +29,17 @@ const postList = (url, watchState) => axios.get(addProxy(url))
     watchState.rssList.unshift(rssSource);
     watchState.postList.unshift(...list);
     watchState.form.processState = 'success';
-    /* watchState.form.processState = 'filling'; */
   })
   .catch((error) => {
     if (error.isParsingError) {
       watchState.form.error = 'errors.typeError';
+      return;
     }
     if (error.isAxiosError) {
       watchState.form.error = 'errors.noNetwork';
+      return;
     }
-    // eslint-disable-next-line no-console
-    console.log(error);
+    watchState.form.error = 'errors.unknownError';
   });
 
 const updateList = (watchState) => {
@@ -72,7 +72,6 @@ const app = () => {
       error: null,
       processError: null,
     },
-    /* list: [], */
     rssList: [],
     postList: [],
     modal: null,
@@ -128,14 +127,15 @@ const app = () => {
         schema
           .validate(value, { abortEarly: false })
           .then(() => {
-            /* watchState.list.push(value.trim()); */
             postList(value.trim(), watchState);
           })
           .catch((err) => {
             watchState.form.error = err.message.key;
+            watchState.form.processState = 'error';
+          })
+          .then(() => {
+            watchState.form.processState = 'filling';
           });
-
-        watchState.form.processState = 'filling';
       });
 
       elements.posts.addEventListener('click', (e) => {

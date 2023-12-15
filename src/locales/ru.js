@@ -11,6 +11,7 @@ export default {
       },
       typeError: 'Ресурс не содержит валидный RSS',
       noNetwork: 'Ошибка сети',
+      unknownError: 'Неизвестная ошибка',
     },
     success: 'RSS успешно загружен',
     feed: {

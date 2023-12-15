@@ -33,29 +33,6 @@ const renderErrorsHandler = (errorMessage, elements, i18n) => {
   elements.input.classList.add('is-invalid');
   elements.feedback.classList.add('text-danger');
   elements.feedback.textContent = i18n.t(errorMessage);
-  /*
-  let errorMessage = {};
-
-  errorMessage = alert !== undefined
-    ? alert.message
-    : alert;
-
-  if (errorMessage) {
-    elements.input.classList.add('is-invalid');
-    elements.feedback.classList.add('text-danger');
-    if (alert.isParsingError) {
-      elements.feedback.textContent = i18n.t('errors.typeError');
-    } else if (alert.isAxiosError) {
-      elements.feedback.textContent = i18n.t('errors.noNetwork');
-    } else {
-      elements.feedback.textContent = i18n.t(errorMessage.key);
-    }
-  } else {
-    elements.input.classList.remove('is-invalid');
-    elements.feedback.classList.remove('text-danger');
-    elements.feedback.textContent = '';
-  }
-  */
 };
 
 const renderRssList = (rss, elements, i18n) => {
