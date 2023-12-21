@@ -1,4 +1,12 @@
-const handleProcessState = (process, elements, i18n) => {
+const renderErrorsHandler = (errorMessage, elements, i18n) => {
+  if (!errorMessage) return;
+
+  elements.input.classList.add('is-invalid');
+  elements.feedback.classList.add('text-danger');
+  elements.feedback.textContent = i18n.t(errorMessage);
+};
+
+const handleProcessState = (process, elements, i18n, state) => {
   switch (process) {
     case 'filling':
       elements.input.disabled = false;
@@ -11,10 +19,14 @@ const handleProcessState = (process, elements, i18n) => {
       break;
 
     case 'error':
-      elements.submit.disabled = true;
+      renderErrorsHandler(state.form.error, elements, i18n);
+      elements.input.disabled = false;
+      elements.submit.disabled = false;
       break;
 
     case 'success':
+      elements.input.disabled = false;
+      elements.submit.disabled = false;
       elements.form.reset();
       elements.input.focus();
       elements.input.classList.remove('is-invalid');
@@ -25,14 +37,6 @@ const handleProcessState = (process, elements, i18n) => {
     default:
       throw new Error(`Unknown process: ${process}`);
   }
-};
-
-const renderErrorsHandler = (errorMessage, elements, i18n) => {
-  if (!errorMessage) return;
-
-  elements.input.classList.add('is-invalid');
-  elements.feedback.classList.add('text-danger');
-  elements.feedback.textContent = i18n.t(errorMessage);
 };
 
 const renderRssList = (rss, elements, i18n) => {
@@ -139,15 +143,15 @@ const removeBold = (element) => {
   element.classList.add('fw-normal');
 };
 
-const initView = (elements, i18n) => (path, value) => {
+const initView = (elements, i18n, state) => (path, value) => {
   switch (path) {
     case 'form.processState':
-      handleProcessState(value, elements, i18n);
+      handleProcessState(value, elements, i18n, state);
       break;
 
-    case 'form.error':
+      /* case 'form.error':
       renderErrorsHandler(value, elements, i18n);
-      break;
+      break; */
 
     case 'rssList':
       renderRssList(value, elements, i18n);

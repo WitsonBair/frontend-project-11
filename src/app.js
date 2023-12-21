@@ -33,13 +33,16 @@ const postList = (url, watchState) => axios.get(addProxy(url))
   .catch((error) => {
     if (error.isParsingError) {
       watchState.form.error = 'errors.typeError';
+      watchState.form.processState = 'error';
       return;
     }
     if (error.isAxiosError) {
       watchState.form.error = 'errors.noNetwork';
+      watchState.form.processState = 'error';
       return;
     }
     watchState.form.error = 'errors.unknownError';
+    watchState.form.processState = 'error';
   });
 
 const updateList = (watchState) => {
@@ -59,7 +62,9 @@ const updateList = (watchState) => {
     })
     .catch((error) => {
       // eslint-disable-next-line no-console
-      console.error(`Error: ${error}`);
+      console.log(error);
+      watchState.form.error = 'errors.updateError';
+      watchState.form.processState = 'error';
     }));
 
   return Promise.all(promises).finally(() => setTimeout(updateList, 5000, watchState));
@@ -111,7 +116,7 @@ const app = () => {
       resources,
     })
     .then(() => {
-      const watchState = onChange(state, initView(elements, i18n));
+      const watchState = onChange(state, initView(elements, i18n, state));
 
       elements.form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -132,9 +137,6 @@ const app = () => {
           .catch((err) => {
             watchState.form.error = err.message.key;
             watchState.form.processState = 'error';
-          })
-          .then(() => {
-            watchState.form.processState = 'filling';
           });
       });
 
