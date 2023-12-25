@@ -14,6 +14,8 @@ const addProxy = (url) => {
   return proxyUrl.toString();
 };
 
+let errorExists = false;
+
 const postList = (url, watchState) => axios.get(addProxy(url))
   .then((response) => {
     const { rssSource, posts } = parse(response.data.contents);
@@ -28,21 +30,26 @@ const postList = (url, watchState) => axios.get(addProxy(url))
 
     watchState.rssList.unshift(rssSource);
     watchState.postList.unshift(...list);
-    watchState.form.processState = 'success';
+    errorExists = false;
   })
   .catch((error) => {
+    errorExists = true;
     if (error.isParsingError) {
       watchState.form.error = 'errors.typeError';
-      watchState.form.processState = 'error';
       return;
     }
     if (error.isAxiosError) {
       watchState.form.error = 'errors.noNetwork';
-      watchState.form.processState = 'error';
       return;
     }
     watchState.form.error = 'errors.unknownError';
-    watchState.form.processState = 'error';
+  })
+  .finally(() => {
+    if (errorExists) {
+      watchState.form.processState = 'error';
+      return;
+    }
+    watchState.form.processState = 'success';
   });
 
 const updateList = (watchState) => {
@@ -63,8 +70,6 @@ const updateList = (watchState) => {
     .catch((error) => {
       // eslint-disable-next-line no-console
       console.log(error);
-      watchState.form.error = 'errors.updateError';
-      watchState.form.processState = 'error';
     }));
 
   return Promise.all(promises).finally(() => setTimeout(updateList, 5000, watchState));
@@ -75,12 +80,11 @@ const app = () => {
     form: {
       processState: 'filling',
       error: null,
-      processError: null,
     },
     rssList: [],
     postList: [],
-    modal: null,
-    seenModalPost: null,
+    modalId: null,
+    seenModalPostId: null,
   };
 
   const elements = {
@@ -142,10 +146,8 @@ const app = () => {
 
       elements.posts.addEventListener('click', (e) => {
         const { id } = e.target.dataset;
-        const modalPost = state.postList.find(({ postId }) => postId === id);
-        const seenPost = elements.posts.querySelector(`[data-id="${id}"]`);
-        watchState.modal = modalPost;
-        watchState.seenModalPost = seenPost;
+        watchState.modalId = id;
+        watchState.seenModalPostId = id;
       });
 
       updateList(watchState);

@@ -132,15 +132,17 @@ const renderPostList = (posts, elements, i18n) => {
   postListContainer.replaceChildren(divPostContainer);
 };
 
-const renderModal = ({ description, link, title }, elements) => {
+const renderModal = (id, elements, state) => {
+  const { description, link, title } = state.postList.find(({ postId }) => postId === id);
   elements.modalTitle.textContent = title;
   elements.modalBody.textContent = description;
   elements.modalLink.setAttribute('href', link);
 };
 
-const removeBold = (element) => {
-  element.classList.remove('fw-bold');
-  element.classList.add('fw-normal');
+const removeBold = (id, elements) => {
+  const seenModalPost = elements.posts.querySelector(`[data-id="${id}"]`);
+  seenModalPost.classList.remove('fw-bold');
+  seenModalPost.classList.add('fw-normal');
 };
 
 const initView = (elements, i18n, state) => (path, value) => {
@@ -148,10 +150,6 @@ const initView = (elements, i18n, state) => (path, value) => {
     case 'form.processState':
       handleProcessState(value, elements, i18n, state);
       break;
-
-      /* case 'form.error':
-      renderErrorsHandler(value, elements, i18n);
-      break; */
 
     case 'rssList':
       renderRssList(value, elements, i18n);
@@ -161,12 +159,12 @@ const initView = (elements, i18n, state) => (path, value) => {
       renderPostList(value, elements, i18n);
       break;
 
-    case 'modal':
-      renderModal(value, elements);
+    case 'modalId':
+      renderModal(value, elements, state);
       break;
 
-    case 'seenModalPost':
-      removeBold(value);
+    case 'seenModalPostId':
+      removeBold(value, elements);
       break;
 
     default:
