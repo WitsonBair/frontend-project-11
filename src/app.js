@@ -14,7 +14,15 @@ const addProxy = (url) => {
   return proxyUrl.toString();
 };
 
-let errorExists = false;
+const getProcessErrorCode = (error) => {
+  if (error.isParsingError) {
+    return 'errors.typeError';
+  }
+  if (error.isAxiosError) {
+    return 'errors.noNetwork';
+  }
+  return 'errors.unknownError';
+};
 
 const postList = (url, watchState) => axios.get(addProxy(url))
   .then((response) => {
@@ -30,26 +38,12 @@ const postList = (url, watchState) => axios.get(addProxy(url))
 
     watchState.rssList.unshift(rssSource);
     watchState.postList.unshift(...list);
-    errorExists = false;
+
+    watchState.form.processState = 'success';
   })
   .catch((error) => {
-    errorExists = true;
-    if (error.isParsingError) {
-      watchState.form.error = 'errors.typeError';
-      return;
-    }
-    if (error.isAxiosError) {
-      watchState.form.error = 'errors.noNetwork';
-      return;
-    }
-    watchState.form.error = 'errors.unknownError';
-  })
-  .finally(() => {
-    if (errorExists) {
-      watchState.form.processState = 'error';
-      return;
-    }
-    watchState.form.processState = 'success';
+    watchState.form.error = getProcessErrorCode(error);
+    watchState.form.processState = 'error';
   });
 
 const updateList = (watchState) => {
@@ -85,6 +79,7 @@ const app = () => {
     postList: [],
     modalId: null,
     seenModalPostId: null,
+    seenModalPostIdList: [],
   };
 
   const elements = {
@@ -136,7 +131,7 @@ const app = () => {
         schema
           .validate(value, { abortEarly: false })
           .then(() => {
-            postList(value.trim(), watchState);
+            postList(value, watchState);
           })
           .catch((err) => {
             watchState.form.error = err.message.key;
@@ -147,6 +142,7 @@ const app = () => {
       elements.posts.addEventListener('click', (e) => {
         const { id } = e.target.dataset;
         watchState.modalId = id;
+        watchState.seenModalPostIdList = [...watchState.seenModalPostIdList, id];
         watchState.seenModalPostId = id;
       });
 

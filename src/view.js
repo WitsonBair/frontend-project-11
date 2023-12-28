@@ -78,7 +78,7 @@ const renderRssList = (rss, elements, i18n) => {
   rssSourceContainer.replaceChildren(divRssSourceContainer);
 };
 
-const renderPostList = (posts, elements, i18n) => {
+const renderPostList = (posts, elements, i18n, state) => {
   const postListContainer = elements.posts;
 
   const divPostContainer = document.createElement('div');
@@ -103,7 +103,11 @@ const renderPostList = (posts, elements, i18n) => {
     );
 
     const aElement = document.createElement('a');
-    aElement.classList.add('fw-bold');
+    if (state.seenModalPostIdList.includes(postId)) {
+      aElement.classList.add('fw-normal');
+    } else {
+      aElement.classList.add('fw-bold');
+    }
     aElement.setAttribute('href', link);
     aElement.dataset.id = postId;
     aElement.setAttribute('target', '_blank');
@@ -156,7 +160,7 @@ const initView = (elements, i18n, state) => (path, value) => {
       break;
 
     case 'postList':
-      renderPostList(value, elements, i18n);
+      renderPostList(value, elements, i18n, state);
       break;
 
     case 'modalId':
