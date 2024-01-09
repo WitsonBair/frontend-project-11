@@ -141,9 +141,6 @@ const renderModal = (id, elements, state) => {
   elements.modalTitle.textContent = title;
   elements.modalBody.textContent = description;
   elements.modalLink.setAttribute('href', link);
-};
-
-const removeBold = (id, elements) => {
   const seenModalPost = elements.posts.querySelector(`[data-id="${id}"]`);
   seenModalPost.classList.remove('fw-bold');
   seenModalPost.classList.add('fw-normal');
@@ -165,10 +162,6 @@ const initView = (elements, i18n, state) => (path, value) => {
 
     case 'modalId':
       renderModal(value, elements, state);
-      break;
-
-    case 'seenModalPostId':
-      removeBold(value, elements);
       break;
 
     default:

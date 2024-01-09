@@ -50,8 +50,8 @@ const updateList = (watchState) => {
   const { rssList, postedList } = watchState;
 
   const promises = rssList.map(({ id, url }) => axios.get(addProxy(url))
-    .then((xml) => parse(xml))
-    .then(({ posts }) => {
+    .then((response) => {
+      const { posts } = parse(response.data.contents);
       const currentPosts = postedList.filter((post) => post.rssId === id);
       const newPosts = posts.map((post) => ({
         ...post,
@@ -78,7 +78,6 @@ const app = () => {
     rssList: [],
     postList: [],
     modalId: null,
-    seenModalPostId: null,
     seenModalPostIdList: [],
   };
 
@@ -143,7 +142,6 @@ const app = () => {
         const { id } = e.target.dataset;
         watchState.modalId = id;
         watchState.seenModalPostIdList = [...watchState.seenModalPostIdList, id];
-        watchState.seenModalPostId = id;
       });
 
       updateList(watchState);
