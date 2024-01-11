@@ -48,20 +48,20 @@ const postList = (url, watchState) => axios
   });
 
 const updateList = (watchState) => {
-  const { rssList, postedList } = watchState;
+  const { rssList, postList } = watchState;
 
   const promises = rssList.map(({ id, url }) => axios
     .get(addProxy(url))
     .then((response) => {
       const { posts } = parse(response.data.contents);
-      const currentPosts = postedList.filter((post) => post.rssId === id);
+      const currentPosts = postList.filter((post) => post.rssId === id);
       const newPosts = posts.map((post) => ({
         ...post,
         rssId: id,
         postId: uniqueId(),
       }));
       const updatedPosts = differenceBy(newPosts, currentPosts, 'link');
-      postedList.unshift(...updatedPosts);
+      postList.unshift(...updatedPosts);
     })
     .catch((error) => {
       // eslint-disable-next-line no-console
@@ -93,7 +93,7 @@ const app = () => {
     modal: document.getElementById('modal'),
     modalTitle: document.querySelector('.modal-title'),
     modalBody: document.querySelector('.modal-body'),
-    modalLink: document.querySelector('.modal-link'),
+    modalLink: document.querySelector('.full-article'),
   };
 
   const defaultLanguage = 'ru';
@@ -120,11 +120,9 @@ const app = () => {
 
       elements.form.addEventListener('submit', (e) => {
         e.preventDefault();
-        watchState.form.processState = 'sending';
-
         const formData = new FormData(e.target);
         const value = formData.get('url');
-        console.log(formData);
+        watchState.form.processState = 'sending';
 
         const schema = yup
           .string()
