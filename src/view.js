@@ -137,7 +137,7 @@ const renderPostList = (posts, elements, i18n, state) => {
 };
 
 const renderModal = (id, elements, state) => {
-  const { description, link, title } = state.postList.find(({ postId }) => postId === id);
+  const { description, link, title } = state.postedList.find(({ postId }) => postId === id);
   elements.modalTitle.textContent = title;
   elements.modalBody.textContent = description;
   elements.modalLink.setAttribute('href', link);
@@ -159,7 +159,7 @@ const initView = (elements, i18n, state) => (path, value) => {
       renderRssList(value, elements, i18n);
       break;
 
-    case 'postList':
+    case 'postedList':
       renderPostList(value, elements, i18n, state);
       break;
 

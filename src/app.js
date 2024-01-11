@@ -38,7 +38,7 @@ const postList = (url, watchState) => axios
     }));
 
     watchState.rssList.unshift(rssSource);
-    watchState.postList.unshift(...list);
+    watchState.postedList.unshift(...list);
 
     watchState.form.processState = 'success';
   })
@@ -48,20 +48,20 @@ const postList = (url, watchState) => axios
   });
 
 const updateList = (watchState) => {
-  const { rssList, postList } = watchState;
+  const { rssList, postedList } = watchState;
 
   const promises = rssList.map(({ id, url }) => axios
     .get(addProxy(url))
     .then((response) => {
       const { posts } = parse(response.data.contents);
-      const currentPosts = postList.filter((post) => post.rssId === id);
+      const currentPosts = postedList.filter((post) => post.rssId === id);
       const newPosts = posts.map((post) => ({
         ...post,
         rssId: id,
         postId: uniqueId(),
       }));
       const updatedPosts = differenceBy(newPosts, currentPosts, 'link');
-      postList.unshift(...updatedPosts);
+      postedList.unshift(...updatedPosts);
     })
     .catch((error) => {
       // eslint-disable-next-line no-console
@@ -78,7 +78,7 @@ const app = () => {
       error: null,
     },
     rssList: [],
-    postList: [],
+    postedList: [],
     modalId: null,
     seenModalPostIdList: [],
   };
