@@ -84,12 +84,12 @@ const app = () => {
   };
 
   const elements = {
-    form: document.getElementById('form'),
-    input: document.getElementById('input'),
-    submit: document.getElementById('submit'),
-    feedback: document.getElementById('feedback'),
-    rssSource: document.getElementById('rssSource'),
-    posts: document.getElementById('posts'),
+    form: document.querySelector('.rss-form'),
+    input: document.getElementById('url-input'),
+    submit: document.querySelector('[type="submit"]'),
+    feedback: document.querySelector('.feedback'),
+    rssSource: document.querySelector('.feeds'),
+    posts: document.querySelector('.posts'),
     modal: document.getElementById('modal'),
     modalTitle: document.getElementById('modal-title'),
     modalBody: document.getElementById('modal-body'),
@@ -124,6 +124,7 @@ const app = () => {
 
         const formData = new FormData(e.target);
         const value = formData.get('url');
+        console.log(formData);
 
         const schema = yup
           .string()
