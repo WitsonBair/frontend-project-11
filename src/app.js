@@ -121,7 +121,9 @@ const app = () => {
       elements.form.addEventListener('submit', (e) => {
         e.preventDefault();
         watchState.form.processState = 'sending';
-        const { value } = e.target.input;
+
+        const formData = new FormData(e.target);
+        const value = formData.get('url');
 
         const schema = yup
           .string()
