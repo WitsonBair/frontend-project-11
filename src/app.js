@@ -91,9 +91,9 @@ const app = () => {
     rssSource: document.querySelector('.feeds'),
     posts: document.querySelector('.posts'),
     modal: document.getElementById('modal'),
-    modalTitle: document.getElementById('modal-title'),
-    modalBody: document.getElementById('modal-body'),
-    modalLink: document.getElementById('modal-link'),
+    modalTitle: document.querySelector('.modal-title'),
+    modalBody: document.querySelector('.modal-body'),
+    modalLink: document.querySelector('.modal-link'),
   };
 
   const defaultLanguage = 'ru';
