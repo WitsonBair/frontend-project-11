@@ -24,7 +24,8 @@ const getProcessErrorCode = (error) => {
   return 'errors.unknownError';
 };
 
-const postList = (url, watchState) => axios.get(addProxy(url))
+const postList = (url, watchState) => axios
+  .get(addProxy(url))
   .then((response) => {
     const { rssSource, posts } = parse(response.data.contents);
 
@@ -49,7 +50,8 @@ const postList = (url, watchState) => axios.get(addProxy(url))
 const updateList = (watchState) => {
   const { rssList, postedList } = watchState;
 
-  const promises = rssList.map(({ id, url }) => axios.get(addProxy(url))
+  const promises = rssList.map(({ id, url }) => axios
+    .get(addProxy(url))
     .then((response) => {
       const { posts } = parse(response.data.contents);
       const currentPosts = postedList.filter((post) => post.rssId === id);
@@ -141,7 +143,9 @@ const app = () => {
       elements.posts.addEventListener('click', (e) => {
         const { id } = e.target.dataset;
         watchState.modalId = id;
-        watchState.seenModalPostIdList = [...watchState.seenModalPostIdList, id];
+        watchState.seenModalPostIdList = watchState.seenModalPostIdList.includes(id)
+          ? [...watchState.seenModalPostIdList]
+          : [...watchState.seenModalPostIdList, id];
       });
 
       updateList(watchState);
