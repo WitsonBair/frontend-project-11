@@ -145,7 +145,7 @@ const app = () => {
         const { id } = e.target.dataset;
         watchState.modalId = id;
         watchState.seenModalPostIdList = watchState.seenModalPostIdList.includes(id)
-          ? [...watchState.seenModalPostIdList]
+          ? watchState.seenModalPostIdList
           : [...watchState.seenModalPostIdList, id];
       });
 

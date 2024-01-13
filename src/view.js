@@ -143,11 +143,11 @@ const renderModal = (id, elements, state) => {
   elements.modalLink.setAttribute('href', link);
 };
 
-const renderViewedPosts = (id, elements) => {
+const renderViewedPosts = (idList, elements) => idList.forEach((id) => {
   const seenModalPost = elements.posts.querySelector(`[data-id="${id}"]`);
   seenModalPost.classList.remove('fw-bold');
   seenModalPost.classList.add('fw-normal');
-};
+});
 
 const initView = (elements, i18n, state) => (path, value) => {
   switch (path) {
@@ -165,6 +165,9 @@ const initView = (elements, i18n, state) => (path, value) => {
 
     case 'modalId':
       renderModal(value, elements, state);
+      break;
+
+    case 'seenModalPostIdList':
       renderViewedPosts(value, elements);
       break;
 
