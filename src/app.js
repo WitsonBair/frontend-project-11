@@ -144,9 +144,9 @@ const app = () => {
       elements.posts.addEventListener('click', (e) => {
         const { id } = e.target.dataset;
         watchState.modalId = id;
-        watchState.seenModalPostIdList = watchState.seenModalPostIdList.includes(id)
-          ? watchState.seenModalPostIdList
-          : [...watchState.seenModalPostIdList, id];
+        if (!watchState.seenModalPostIdList.includes(id)) {
+          watchState.seenModalPostIdList = [...watchState.seenModalPostIdList, id];
+        }
       });
 
       updateList(watchState);
